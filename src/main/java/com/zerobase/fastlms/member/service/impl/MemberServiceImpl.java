@@ -5,12 +5,15 @@ import com.zerobase.fastlms.admin.mapper.MemberMapper;
 import com.zerobase.fastlms.admin.model.MemberParam;
 import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.course.model.ServiceResult;
+import com.zerobase.fastlms.member.entity.LoginHistory;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.entity.MemberCode;
 import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
 import com.zerobase.fastlms.member.exception.MemberStopUserException;
+import com.zerobase.fastlms.member.model.LoginHistoryDto;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
+import com.zerobase.fastlms.member.repository.LoginHistoryRepository;
 import com.zerobase.fastlms.member.repository.MemberRepository;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.util.PasswordUtils;
@@ -39,6 +42,8 @@ public class MemberServiceImpl implements MemberService {
     private final MailComponents mailComponents;
     
     private final MemberMapper memberMapper;
+
+    private final LoginHistoryRepository loginHistoryRepository;
     
     /**
      * 회원 가입
@@ -133,6 +138,11 @@ public class MemberServiceImpl implements MemberService {
         if (!CollectionUtils.isEmpty(list)) {
             int i = 0;
             for(MemberDto x : list) {
+                Optional<LoginHistory> lastHistory = getLastHistory(x);
+
+                if(lastHistory!=null){
+                    x.setLoginDt(lastHistory.get().getLoginDt());
+                }
                 x.setTotalCount(totalCount);
                 x.setSeq(totalCount - parameter.getPageStart() - i);
                 i++;
@@ -143,7 +153,15 @@ public class MemberServiceImpl implements MemberService {
         
         //return memberRepository.findAll();
     }
-    
+
+    private Optional<LoginHistory> getLastHistory(MemberDto x) {
+        Optional<LoginHistory> optionalLoginHistory= loginHistoryRepository.findFirstByUserIdOrderByLoginDtDesc(x.getUserId());
+        if(!optionalLoginHistory.isPresent()){
+            return null;
+        }
+        return optionalLoginHistory;
+    }
+
     @Override
     public MemberDto detail(String userId) {
         
@@ -268,7 +286,36 @@ public class MemberServiceImpl implements MemberService {
         
         return new ServiceResult();
     }
-    
+
+    @Override
+    public boolean insertLoginHistory(String userId, String ip, String userAgent) {
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            return false; // 없을경우 throw.. 고려할것
+        }
+
+        LoginHistory loginHistory = LoginHistory.builder()
+                .userId(userId)
+                .loginDt(LocalDateTime.now())
+                .ip(ip)
+                .userAgent(userAgent)
+                .build();
+        loginHistoryRepository.save(loginHistory);
+        return true;
+    }
+
+    @Override
+    public List<LoginHistoryDto> getLoginHistories(String userId) {
+        Optional<List<LoginHistory>> optionalLoginHistories= loginHistoryRepository.findAllByUserIdOrderByLoginDtDesc(userId);
+
+        if(!optionalLoginHistories.isPresent()){// 없을경우
+            return null;
+        }
+
+        return LoginHistoryDto.of(optionalLoginHistories.get());
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

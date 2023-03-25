@@ -23,7 +23,9 @@ public class Member implements MemberCode {
     private String password;
     private LocalDateTime regDt;
     private LocalDateTime udtDt;//회원정보 수정일
-    
+
+
+
     private boolean emailAuthYn;
     private LocalDateTime emailAuthDt;
     private String emailAuthKey;

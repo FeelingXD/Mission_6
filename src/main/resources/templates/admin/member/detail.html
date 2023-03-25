@@ -12,6 +12,14 @@
             border:solid 1px #000;
         }
 
+
+        .history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history table th, .history table td {
+            border:solid 1px #000;
+        }
     </style>
 </head>
 <body>
@@ -100,10 +108,26 @@
             <a href="list.do"> 목록 </a>
 
         </div>
-
-
     </div>
+    <br/>
 
-
+<div class="history">
+    <table>
+        <thead>
+            <th>NO</th>
+            <th>일자</th>
+            <th>IP</th>
+            <th>USER-AGENT</th>
+        </thead>
+        <tbody>
+            <tr th:each="x : ${loginHistory}">
+                <td><p th:text="${x.id}"></p></td>
+                <td><p th:text="${x.loginDt}"></p></td>
+                <td><p th:text="${x.ip}"></p></td>
+                <td><p th:text="${x.userAgent}"></p></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
