@@ -20,7 +20,7 @@ spring:
         smtp:
           starttls:
             enable: true
-            
+
 logging:
   level:
     root: info
@@ -31,3 +31,5 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+external:
+  url : C:/jimin/Mission_6/files/

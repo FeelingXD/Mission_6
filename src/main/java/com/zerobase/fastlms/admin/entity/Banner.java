@@ -1,14 +1,12 @@
 package com.zerobase.fastlms.admin.entity;
 
+import com.zerobase.fastlms.admin.dto.BannerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -20,18 +18,19 @@ public class Banner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
-    String forwardTo;
+    private String bannerName;
 
-    boolean useYn;
-    String targetStatus;
-    int sortValue;
+    private String filename;
+    private String urlFilename;
 
-    LocalDateTime regDt;
-    LocalDateTime udtDt;
+    @Enumerated(EnumType.STRING)
+    private BannerStatus target;
+    private String link; //이미지링크
+    private int sortValue; //정렬기준
 
-    String filename;
-    String urlFilename;
+    private boolean usingYn; //사용여부
+
+    private LocalDateTime regDt;
 }
