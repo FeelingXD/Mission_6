@@ -172,7 +172,7 @@ public class AdminBannerController extends BaseController {
 
     @PostMapping("/admin/banner/delete.do")
     public String delete(Model model, HttpServletRequest request ,BannerInput parameter){
-        boolean result= bannerService.del(parameter.getId());
+        boolean result= bannerService.del(parameter.getIdList());
         return"redirect:/admin/banner/list.do";
     }
 }

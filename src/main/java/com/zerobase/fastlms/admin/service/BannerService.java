@@ -30,7 +30,7 @@ public interface BannerService {
     /**
      * 배너 삭제
      */
-    boolean del(long idList);
+    boolean del(String idList);
 
     /**
      * 프론트 배너

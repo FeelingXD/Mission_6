@@ -19,4 +19,6 @@ public class BannerInput {
     boolean usingYn;
 
     LocalDate regDt;
+    // 삭제를 위한
+    String idList;
 }

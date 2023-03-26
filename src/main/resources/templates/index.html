@@ -11,8 +11,8 @@
         $(document).ready(function() {
             $('.bxslider').bxSlider({
                 auto: true,
-                speed: 500,
-                pause: 4000,
+                speed: 1000,
+                pause: 3000,
                 mode: 'fade',
                 autoControls: true,
                 pager: true
@@ -28,7 +28,7 @@
 <div class="home__slider">
     <div class="bxslider">
         <div th:each="x : ${list}">
-            <a th:href="${x.link}" th:alt="${x.bannerName}" th:target="${x.target.getValue()}">
+            <a th:href="${x.urlFilename}" th:alt="${x.bannerName}" th:target="${x.target.getValue()}">
                 <img th:src="${x.urlFilename}">
             </a>
         </div>

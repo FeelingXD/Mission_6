@@ -82,8 +82,22 @@ public class BannerServiceImpl implements BannerService{
     }
 
     @Override
-    public boolean del(long id) {
-        bannerRepository.deleteById(id);
+    public boolean del(String idList) {
+        if (idList != null && idList.length() > 0) {
+            String[] ids = idList.split(",");
+            for (String x: ids) {
+                long id = 0L;
+                try {
+                    id = Long.parseLong(x);
+                } catch (Exception e) {
+                }
+
+                if (id > 0) {
+                    bannerRepository.deleteById(id);
+                }
+            }
+        }
+
         return true;
     }
 
